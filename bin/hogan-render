@@ -5,7 +5,9 @@
  */
 var hogan = require('hogan.js'),
 	nopt = require('nopt'),
-    fs = require('fs');
+  fs = require('fs'),
+  path = require('path');
+  glob = require('glob');
 
 var options = {
 	version: true
@@ -36,7 +38,17 @@ if (!templateFile) {
 }
 
 var template = hogan.compile(fs.readFileSync(templateFile).toString()),
-    dataFile = options.argv.remain[1] || '/dev/stdin';
+    dataFile = options.argv.remain[1] || '/dev/stdin',
+    partials = {};
+
+// Any templates below current directory made into partials
+glob('**/*.mustache', { sync: true }, function (er, files) {
+  files.forEach(function(file){
+    if (file != templateFile) {
+      partials[path.basename(file, '.mustache')] = fs.readFileSync(file).toString();
+    }
+  });
+});
 
 try {
   data = JSON.parse(fs.readFileSync(dataFile));
@@ -47,7 +59,7 @@ catch (e) {
 }
 
 try {
-  html = template.render(data);
+  html = template.render(data, partials);
   console.log(html);
 }
 catch (e) {

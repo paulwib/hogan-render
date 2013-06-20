@@ -13,7 +13,8 @@
   }
   , "dependencies" : {
       "hogan.js" : "git+ssh://git@github.com:twitter/hogan.js.git"
-      , "nopt" : "1.0.10"
+      , "nopt" : "~1.0"
+      , "glob" : "~3.2"
     }
   , "devDependencies": {
   }
