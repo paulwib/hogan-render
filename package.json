@@ -1,0 +1,21 @@
+{
+  "name": "hogan-render"
+  , "description": "Render hogan templates on the command-line"
+  , "version": "0.0.1"
+  , "keywords": ["mustache", "template", "hogan"]
+  , "main": "./lib/hogan-render.js"
+  , "homepage": ""
+  , "author": "Paul Willoughby"
+  , "license": "MIT"
+  , "repository": {
+    "type": "git"
+    , "url": ""
+  }
+  , "dependencies" : {
+      "hogan.js" : "git+ssh://git@github.com:twitter/hogan.js.git"
+      , "nopt" : "1.0.10"
+    }
+  , "devDependencies": {
+  }
+  , "bin" : "./bin/hogan-render"
+}

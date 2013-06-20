@@ -1,0 +1,56 @@
+#!/usr/bin/env node
+
+/**
+ * Render a hogan template from the command-line
+ */
+var hogan = require('hogan.js'),
+	nopt = require('nopt'),
+    fs = require('fs');
+
+var options = {
+	version: true
+},
+	shorthand = {
+	v: ['--version']
+};
+
+options = nopt(options, shorthand);
+if (options.version) {
+	console.log(require('../package.json').version);
+	process.exit(0);
+}
+
+var templateFile = options.argv.remain[0];
+if (!templateFile) {
+    console.log();
+    console.log('USAGE: hogan-render <mustache template file> <json data file>');
+    console.log('EXAMPLE: hogan-render template.mustache data.json');
+    console.log();
+    console.log('Alternatively data can be read from STDIN e.g.');
+    console.log();
+    console.log('    cat data.json | hogan-render template.mustache');
+    console.log();
+    console.log('You can also run with just a template and type data at stdin');
+    console.log('Use Ctrl+D (i.e. EOF) to have the data rendered');
+    process.exit(1);
+}
+
+var template = hogan.compile(fs.readFileSync(templateFile).toString()),
+    dataFile = options.argv.remain[1] || '/dev/stdin';
+
+try {
+  data = JSON.parse(fs.readFileSync(dataFile));
+}
+catch (e) {
+  console.log('Data could not be parsed as JSON');
+  process.exit(1);
+}
+
+try {
+  html = template.render(data);
+  console.log(html);
+}
+catch (e) {
+  console.log('Template could nt be rendered');
+  process.exit(2);
+}
